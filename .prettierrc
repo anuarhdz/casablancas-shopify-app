@@ -1,0 +1,21 @@
+{
+  "useTabs": false,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "semi": false,
+  "printWidth": 90,
+  "bracketSameLine": false,
+  "svelteBracketNewLine": false,
+  "singleAttributePerLine": true,
+  "plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+  "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte"
+      }
+    }
+  ],
+  "tailwindStylesheet": "./src/routes/layout.css",
+  "tailwindFunctions": ["cva", "cx", "cn", "tv", "clsx"]
+}
