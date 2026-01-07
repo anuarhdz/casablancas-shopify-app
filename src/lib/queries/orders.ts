@@ -1,13 +1,33 @@
 export const GET_ORDERS_QUERY = /* GraphQL */ `
   #graphql
-  query getOrders($first: Int!, $query: String) {
-    orders(first: $first, query: $query, sortKey: CREATED_AT, reverse: true) {
+  query getOrders($first: Int!) {
+    orders(first: $first, sortKey: CREATED_AT, reverse: true) {
       edges {
-        cursor
         node {
           id
           name
           createdAt
+          note
+          tags
+          customer {
+            firstName
+            lastName
+            id
+            numberOfOrders
+            defaultAddress {
+              address1
+              address2
+              city
+              zip
+              province
+              country
+              phone
+              company
+              latitude
+              longitude
+              name
+            }
+          }
           totalPriceSet {
             shopMoney {
               amount
@@ -16,10 +36,7 @@ export const GET_ORDERS_QUERY = /* GraphQL */ `
           }
           displayFinancialStatus
         }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
+        cursor
       }
     }
   }

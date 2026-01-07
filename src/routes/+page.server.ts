@@ -1,10 +1,10 @@
-import { getOrders } from "$lib/shopify"
+import { getProducts } from "$lib/shopify"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async () => {
-  const { data } = await getOrders()
+  const { data } = await getProducts()
 
   return {
-    orders: data,
+    products: data?.products.edges ?? [],
   }
 }

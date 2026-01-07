@@ -4,6 +4,7 @@ import {
   PRIVATE_SHOPIFY_STORE_DOMAIN,
 } from "$env/static/private"
 import { COUNT_ORDERS_QUERY, GET_ORDERS_QUERY } from "$lib/queries/orders"
+import { GET_PRODUCTS_QUERY } from "$lib/queries/products"
 import { createAdminApiClient } from "@shopify/admin-api-client"
 import "@shopify/shopify-api/adapters/node"
 
@@ -47,6 +48,28 @@ export const getOrders = async (limit: number = 2) => {
     return {
       success: false,
       orders: [],
+    }
+  }
+}
+
+export const getProducts = async () => {
+  try {
+    const response = await client.request(GET_PRODUCTS_QUERY, {
+      variables: {
+        first: 10,
+      },
+    })
+    console.log(response.extensions)
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    console.error("error fetching products: ", error)
+    return {
+      success: false,
+      data: null,
     }
   }
 }

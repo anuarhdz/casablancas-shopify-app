@@ -1,5 +1,5 @@
 <script lang="ts">
   let { data } = $props()
-  let orders = $derived(data.orders)
-  $inspect(orders)
+  let products = $derived(data.products)
+  //$inspect(products)
 </script>
