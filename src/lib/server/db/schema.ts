@@ -1,5 +1,6 @@
+import { createId } from "@paralleldrive/cuid2"
 import { relations } from "drizzle-orm"
-import { integer, numeric, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { integer, numeric, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
 export const product = pgTable("product", {
   id: text("id").primaryKey(),
@@ -58,9 +59,30 @@ export const productMediaRelations = relations(productMedia, ({ one }) => ({
   }),
 }))
 
+export const statusEnum = pgEnum("status", [
+  "CREATED",
+  "RUNNING",
+  "COMPLETED",
+  "FAILED",
+  "CANCELED",
+  "EXPIRED",
+  "CANCELING",
+])
+
+export const bulkOperation = pgTable("bulk_operation", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  shopifyId: text("shopify_id").notNull(),
+  status: text("status").notNull(),
+  url: text("url").notNull(),
+})
+
 export type InsertProduct = typeof product.$inferInsert
 export type SelectProduct = typeof product.$inferSelect
 export type InsertProductVariant = typeof productVariant.$inferInsert
 export type SelectProductVariant = typeof productVariant.$inferSelect
 export type InsertProductMedia = typeof productMedia.$inferInsert
 export type SelectProductMedia = typeof productMedia.$inferSelect
+export type InsertBulkOperation = typeof bulkOperation.$inferInsert
+export type SelectBulkOperation = typeof bulkOperation.$inferSelect

@@ -3,8 +3,9 @@ import {
   PRIVATE_SHOPIFY_API_VERSION,
   PRIVATE_SHOPIFY_STORE_DOMAIN,
 } from "$env/static/private"
+import { BULK_PRODUCTS_MUTATION } from "$lib/mutations/products"
 import { COUNT_ORDERS_QUERY, GET_ORDERS_QUERY } from "$lib/queries/orders"
-import { GET_PRODUCTS_QUERY } from "$lib/queries/products"
+import { BULK_PRODUCTS_QUERY, GET_PRODUCTS_QUERY } from "$lib/queries/products"
 import { createAdminApiClient } from "@shopify/admin-api-client"
 import "@shopify/shopify-api/adapters/node"
 
@@ -67,6 +68,27 @@ export const getProducts = async () => {
     }
   } catch (error) {
     console.error("error fetching products: ", error)
+    return {
+      success: false,
+      data: null,
+    }
+  }
+}
+
+export const getBulkProducts = async () => {
+  try {
+    const response = await client.request(BULK_PRODUCTS_MUTATION, {
+      variables: {
+        query: BULK_PRODUCTS_QUERY,
+      },
+    })
+
+    return {
+      success: true,
+      data: response.data ?? null,
+    }
+  } catch (error) {
+    console.log("error fetching bulk products", error)
     return {
       success: false,
       data: null,

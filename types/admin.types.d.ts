@@ -31970,6 +31970,8 @@ export enum MetafieldDefinitionCreateUserErrorCode {
   LimitExceeded = 'LIMIT_EXCEEDED',
   /** You have reached the maximum allowed definitions for automated collections. */
   OwnerTypeLimitExceededForAutomatedCollections = 'OWNER_TYPE_LIMIT_EXCEEDED_FOR_AUTOMATED_COLLECTIONS',
+  /** You have reached the maximum allowed definitions to be used as admin filters. */
+  OwnerTypeLimitExceededForUseAsAdminFilters = 'OWNER_TYPE_LIMIT_EXCEEDED_FOR_USE_AS_ADMIN_FILTERS',
   /** The pinned limit has been reached for the owner type. */
   PinnedLimitReached = 'PINNED_LIMIT_REACHED',
   /** The input value needs to be blank. */
@@ -32355,6 +32357,8 @@ export enum MetafieldDefinitionUpdateUserErrorCode {
   NotFound = 'NOT_FOUND',
   /** You have reached the maximum allowed definitions for automated collections. */
   OwnerTypeLimitExceededForAutomatedCollections = 'OWNER_TYPE_LIMIT_EXCEEDED_FOR_AUTOMATED_COLLECTIONS',
+  /** You have reached the maximum allowed definitions to be used as admin filters. */
+  OwnerTypeLimitExceededForUseAsAdminFilters = 'OWNER_TYPE_LIMIT_EXCEEDED_FOR_USE_AS_ADMIN_FILTERS',
   /** The pinned limit has been reached for the owner type. */
   PinnedLimitReached = 'PINNED_LIMIT_REACHED',
   /** The input value needs to be blank. */
@@ -62784,6 +62788,8 @@ export enum StandardMetafieldDefinitionEnableUserErrorCode {
   InvalidInputCombination = 'INVALID_INPUT_COMBINATION',
   /** The maximum number of definitions per owner type has been exceeded. */
   LimitExceeded = 'LIMIT_EXCEEDED',
+  /** You have reached the maximum allowed definitions to be used as admin filters. */
+  OwnerTypeLimitExceededForUseAsAdminFilters = 'OWNER_TYPE_LIMIT_EXCEEDED_FOR_USE_AS_ADMIN_FILTERS',
   /** The input value is already taken. */
   Taken = 'TAKEN',
   /** The standard metafield definition template was not found. */

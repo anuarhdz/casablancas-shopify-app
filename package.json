@@ -43,6 +43,7 @@
     "vite": "^7.2.6"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.0.6",
     "@shopify/admin-api-client": "^1.1.1",
     "@shopify/shopify-api": "^12.2.0",
     "@shopify/storefront-api-client": "^1.0.9",
