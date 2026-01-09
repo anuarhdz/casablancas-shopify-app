@@ -12,7 +12,10 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "supabase migration up",
+    "db:push": "supabase db push"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.0",
@@ -24,6 +27,7 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^22",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.13.1",
@@ -42,6 +46,8 @@
     "@shopify/admin-api-client": "^1.1.1",
     "@shopify/shopify-api": "^12.2.0",
     "@shopify/storefront-api-client": "^1.0.9",
-    "graphql": "^16.12.0"
+    "drizzle-orm": "^0.45.1",
+    "graphql": "^16.12.0",
+    "postgres": "^3.4.8"
   }
 }
