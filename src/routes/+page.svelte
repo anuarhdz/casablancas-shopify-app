@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { data } = $props()
-  let products = $derived(data.products)
-  $inspect(products)
+  import SyncGroup from "$lib/components/sync-group.svelte"
 </script>
+
+<div class="grid min-h-svh place-items-center">
+  <SyncGroup />
+</div>

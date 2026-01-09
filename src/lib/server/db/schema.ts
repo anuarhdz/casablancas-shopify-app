@@ -75,7 +75,7 @@ export const bulkOperation = pgTable("bulk_operation", {
     .$defaultFn(() => createId()),
   shopifyId: text("shopify_id").notNull(),
   status: text("status").notNull(),
-  url: text("url").notNull(),
+  url: text("url"),
 })
 
 export type InsertProduct = typeof product.$inferInsert

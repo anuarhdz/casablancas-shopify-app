@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db"
 import { bulkOperation as bulkOperationTable } from "$lib/server/db/schema"
 import { getBulkProducts } from "$lib/shopify"
-import { error } from "@sveltejs/kit"
+import { error, json } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types"
 
 export const POST: RequestHandler = async () => {
@@ -14,17 +14,22 @@ export const POST: RequestHandler = async () => {
   const { bulkOperation, userErrors } = data.bulkOperationRunQuery
 
   if (userErrors?.length) {
-    console.error("Bulk operation errors", userErrors)
-    return new Response(JSON.stringify({ errors: userErrors }), { status: 400 })
+    console.error("Bulk operation errors:", userErrors)
+    return error(400, userErrors[0].message)
   }
 
   if (bulkOperation) {
-    await db.insert(bulkOperationTable).values({
-      shopifyId: bulkOperation.id,
-      status: bulkOperation.status,
-      url: bulkOperation.url,
-    })
+    try {
+      await db.insert(bulkOperationTable).values({
+        shopifyId: bulkOperation.id,
+        status: bulkOperation.status,
+        url: bulkOperation.url,
+      })
+    } catch (err) {
+      console.error("Failed to save bulk operation:", err)
+      return error(500, "Failed to save bulk operation to database")
+    }
   }
 
-  return new Response(JSON.stringify({ bulkOperation }), { status: 200 })
+  return json({ status: 200, bulkOperation })
 }

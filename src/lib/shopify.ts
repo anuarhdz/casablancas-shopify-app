@@ -5,7 +5,11 @@ import {
 } from "$env/static/private"
 import { BULK_PRODUCTS_MUTATION } from "$lib/mutations/products"
 import { COUNT_ORDERS_QUERY, GET_ORDERS_QUERY } from "$lib/queries/orders"
-import { BULK_PRODUCTS_QUERY, GET_PRODUCTS_QUERY } from "$lib/queries/products"
+import {
+  BULK_PRODUCTS_OPERATION_BY_ID,
+  BULK_PRODUCTS_QUERY,
+  GET_PRODUCTS_QUERY,
+} from "$lib/queries/products"
 import { createAdminApiClient } from "@shopify/admin-api-client"
 import "@shopify/shopify-api/adapters/node"
 
@@ -93,5 +97,57 @@ export const getBulkProducts = async () => {
       success: false,
       data: null,
     }
+  }
+}
+
+type BulkStatus = "CREATED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELED"
+
+interface BulkOperationResult {
+  id: string
+  status: BulkStatus
+  url: string | null
+  errorCode: string | null
+  objectCount: string | null // viene como string
+}
+
+export const pollBulkOperationById = async ({
+  bulkOperationId,
+  intervalMs = 3000,
+  timeoutMs = 5 * 60 * 1000,
+}: {
+  bulkOperationId: string
+  intervalMs?: number
+  timeoutMs?: number
+}): Promise<BulkOperationResult> => {
+  const start = Date.now()
+
+  while (true) {
+    const response = await client.request(BULK_PRODUCTS_OPERATION_BY_ID, {
+      variables: {
+        id: bulkOperationId,
+      },
+    })
+
+    const node = response.data?.node
+
+    if (!node) {
+      throw new Error(`Bulk operation not found for id: ${bulkOperationId}`)
+    }
+
+    const { id, status, url, errorCode, objectCount } = node as BulkOperationResult
+
+    if (status === "COMPLETED") {
+      return { id, status, url, errorCode, objectCount }
+    }
+
+    if (status === "FAILED" || status === "CANCELED") {
+      throw new Error(`Bulk operation ${status}. ErrorCode: ${errorCode ?? "N/A"}`)
+    }
+
+    if (Date.now() - start > timeoutMs) {
+      throw new Error("Bulk operation polling timed out")
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, intervalMs))
   }
 }
