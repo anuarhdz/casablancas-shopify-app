@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import "./typography.css" layer(components);
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -111,6 +111,11 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  --font-sans: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -118,4 +123,11 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    @apply font-sans;
+  }
+}
+
+@utility text-box {
+  text-box: cap alphabetic;
 }
