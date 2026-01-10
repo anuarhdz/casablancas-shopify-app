@@ -1,7 +1,9 @@
 import {
   PRIVATE_SHOPIFY_ADMIN_API_ACCESS_TOKEN,
   PRIVATE_SHOPIFY_API_VERSION,
-  PRIVATE_SHOPIFY_STORE_DOMAIN,
+  SHOPIFY_API_SECRET,
+  SHOPIFY_SCOPES,
+  SHOPIFY_STORE_DOMAIN,
 } from "$env/static/private"
 import { BULK_PRODUCTS_MUTATION } from "$lib/mutations/products"
 import { COUNT_ORDERS_QUERY, GET_ORDERS_QUERY } from "$lib/queries/orders"
@@ -10,12 +12,37 @@ import {
   BULK_PRODUCTS_QUERY,
   GET_PRODUCTS_QUERY,
 } from "$lib/queries/products"
+import { getShopifyCredentials } from "$lib/server/shopify"
 import { createAdminApiClient } from "@shopify/admin-api-client"
+import { ApiVersion, shopifyApi } from "@shopify/shopify-api"
 import "@shopify/shopify-api/adapters/node"
+const { accessToken } = await getShopifyCredentials()
+
+export const shopify = shopifyApi({
+  apiSecretKey: SHOPIFY_API_SECRET,
+  adminApiAccessToken: accessToken,
+  scopes: SHOPIFY_SCOPES.split(","),
+  hostName: SHOPIFY_STORE_DOMAIN,
+  apiVersion: ApiVersion.January26,
+  isEmbeddedApp: false,
+  isCustomStoreApp: true,
+})
+
+export const createShopifySession = () => {
+  return shopify.session.customAppSession(SHOPIFY_STORE_DOMAIN)
+}
+
+export const createGraphQLClient = async () => {
+  const session = createShopifySession()
+  return new shopify.clients.Graphql({
+    session,
+    apiVersion: ApiVersion.January26,
+  })
+}
 
 export const client = createAdminApiClient({
   accessToken: PRIVATE_SHOPIFY_ADMIN_API_ACCESS_TOKEN,
-  storeDomain: PRIVATE_SHOPIFY_STORE_DOMAIN,
+  storeDomain: SHOPIFY_STORE_DOMAIN,
   apiVersion: PRIVATE_SHOPIFY_API_VERSION,
 })
 

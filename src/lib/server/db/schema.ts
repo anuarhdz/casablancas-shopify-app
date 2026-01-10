@@ -1,6 +1,24 @@
 import { createId } from "@paralleldrive/cuid2"
 import { relations } from "drizzle-orm"
-import { integer, numeric, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import {
+  integer,
+  numeric,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core"
+
+export const shopifyStore = pgTable("shopify_store", {
+  id: serial("id").primaryKey(),
+  shopDomain: varchar("shop_domain", { length: 255 }).notNull().unique(),
+  accessToken: text("access_token").notNull(),
+  scope: text("scope"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
 
 export const product = pgTable("product", {
   id: text("id").primaryKey(),
@@ -86,3 +104,5 @@ export type InsertProductMedia = typeof productMedia.$inferInsert
 export type SelectProductMedia = typeof productMedia.$inferSelect
 export type InsertBulkOperation = typeof bulkOperation.$inferInsert
 export type SelectBulkOperation = typeof bulkOperation.$inferSelect
+export type InsertShopifyStore = typeof shopifyStore.$inferInsert
+export type SelectShopifyStore = typeof shopifyStore.$inferSelect

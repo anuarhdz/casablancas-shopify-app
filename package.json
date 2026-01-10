@@ -15,7 +15,8 @@
     "codegen": "graphql-codegen",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "supabase migration up",
-    "db:push": "supabase db push"
+    "db:push": "supabase db push",
+    "tunnel": "ngrok http --url=untense-williemae-derangedly.ngrok-free.dev http://localhost:5173"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.0",
