@@ -1,4 +1,8 @@
 <script lang="ts">
+  let { data } = $props()
+
+  $inspect(data)
+
   import ShopStatus from "$lib/components/shop-status.svelte"
   // import SyncGroup from "$lib/components/sync-group.svelte"
 </script>

@@ -40,5 +40,16 @@ export default defineConfig(
   },
   {
     ignores: ["./types/**.ts"],
+  },
+  {
+    rules: {
+      "svelte/no-navigation-without-resolve": [
+        "error",
+        {
+          ignoreGoto: true,
+          ignoreLink: true,
+        },
+      ],
+    },
   }
 )
