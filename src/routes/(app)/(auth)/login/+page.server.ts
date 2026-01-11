@@ -7,7 +7,6 @@ import type { Actions, PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async ({ locals }) => {
   const { user, session } = locals
-  console.log(user)
 
   if (user || session) {
     redirect(302, "/")
@@ -48,7 +47,6 @@ export const actions: Actions = {
         console.log(error.message, error.status)
       }
     }
-    console.log(result.output)
     console.log(authData)
 
     if (authData?.user) {

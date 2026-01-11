@@ -1,9 +1,17 @@
 <script lang="ts">
+  import ShopStatus from "$lib/components/shop-status.svelte"
+
   let { data } = $props()
 
-  $inspect(data)
+  let user = $derived(data.user)
 
-  import ShopStatus from "$lib/components/shop-status.svelte"
+  // const { data: authData, error } = await authClient.admin.setRole({
+  //   userId: "ULcdrPIqkl0aWzSVnLlRX5wPWa3vO6hh",
+  //   role: "admin",
+  // })
+
+  // $inspect(authData)
+
   // import SyncGroup from "$lib/components/sync-group.svelte"
 </script>
 

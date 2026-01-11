@@ -1,10 +1,10 @@
-import { dev } from "$app/environment"
 import { getRequestEvent } from "$app/server"
 import { BETTER_AUTH_SECRET, BETTER_AUTH_URL, SHOPIFY_APP_URL } from "$env/static/private"
 import { db } from "$lib/server/db"
 import * as schema from "$lib/server/db/schema"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { admin } from "better-auth/plugins"
 import { sveltekitCookies } from "better-auth/svelte-kit"
 
 export const auth = betterAuth({
@@ -30,14 +30,12 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [BETTER_AUTH_URL, SHOPIFY_APP_URL],
-  plugins: [sveltekitCookies(getRequestEvent)],
+  plugins: [admin(), sveltekitCookies(getRequestEvent)],
   logger: {
-    disabled: !dev,
-    level: dev ? "debug" : "error",
+    disabled: true,
+    level: "debug",
     log: (level, message) => {
-      if (dev) {
-        console.log(`[${level}] ${message}`)
-      }
+      console.log(`[${level}] ${message}`)
     },
   },
 })
