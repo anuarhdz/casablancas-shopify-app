@@ -8,7 +8,7 @@ export const requireLogin = () => {
     const redirectTo = url.pathname + url.search
     const params = new URLSearchParams({ redirectTo })
 
-    redirect(307, `/login?${params}`)
+    redirect(307, url.pathname !== "/" ? `/login?${params}` : "/login")
   }
 
   return locals.user

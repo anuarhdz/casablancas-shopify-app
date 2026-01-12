@@ -44,11 +44,14 @@ export const actions: Actions = {
     } catch (error) {
       if (error instanceof APIError) {
         console.log(error.message, error.status)
+        return fail(400, error)
       }
     }
 
-    console.log(authData)
+    if (authData?.user) {
+      redirect(302, "/account")
+    }
 
-    return { success: true }
+    return { success: true, authData }
   },
 }

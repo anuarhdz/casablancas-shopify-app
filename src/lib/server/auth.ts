@@ -30,7 +30,10 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [BETTER_AUTH_URL, SHOPIFY_APP_URL],
-  plugins: [admin(), sveltekitCookies(getRequestEvent)],
+  plugins: [
+    admin({ adminUserIds: ["FUxSVTnAKuMSeJze9cr6O5vGbJuEyvoo"] }),
+    sveltekitCookies(getRequestEvent),
+  ],
   logger: {
     disabled: true,
     level: "debug",
