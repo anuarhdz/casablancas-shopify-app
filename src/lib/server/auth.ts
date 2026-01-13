@@ -18,6 +18,16 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: true,
     requireEmailVerification: false,
+    sendResetPassword: async ({ user, url, token }, request) => {
+      console.log(request)
+      console.log(user)
+      console.log(url)
+      console.log(token)
+    },
+    onPasswordReset: async ({ user }, request) => {
+      // your logic here
+      console.log(`Password for user ${user.email} has been reset.`)
+    },
   },
   emailVerification: {
     sendOnSignIn: true,

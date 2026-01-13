@@ -1,4 +1,4 @@
-import { LoginSchema } from "$lib/schema"
+import { ForgotPasswordSchema } from "$lib/schema"
 import { auth } from "$lib/server/auth"
 import { fail, redirect } from "@sveltejs/kit"
 import { APIError } from "better-auth/api"
@@ -18,7 +18,7 @@ export const actions: Actions = {
     const formData = await request.formData()
     const data = Object.fromEntries(formData)
 
-    const result = v.safeParse(LoginSchema, data)
+    const result = v.safeParse(ForgotPasswordSchema, data)
 
     if (!result.success) {
       const errors: Record<string, string> = {}
@@ -31,28 +31,23 @@ export const actions: Actions = {
       return fail(400, { errors, data })
     }
 
-    const redirectTo = url.searchParams.get("redirectTo")
+    const redirectTo = url.origin + "/reset-password"
     let authData
 
     try {
-      authData = await auth.api.signInEmail({
+      authData = await auth.api.requestPasswordReset({
         body: {
           email: result.output.email,
-          password: result.output.password,
+          redirectTo,
         },
-        headers: request.headers,
       })
     } catch (error) {
       if (error instanceof APIError) {
         console.log(error.message, error.status)
-        return fail(400, { message: error.message })
       }
     }
+    console.log(authData)
 
-    if (authData?.user) {
-      redirect(302, redirectTo ?? "/")
-    }
-
-    return { auth: authData }
+    return { message: authData?.message }
   },
 }

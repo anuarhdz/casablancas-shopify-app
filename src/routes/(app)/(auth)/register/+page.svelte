@@ -15,7 +15,7 @@
     FieldGroup,
     FieldLabel,
   } from "$lib/components/ui/field"
-  import { Input } from "$lib/components/ui/input"
+  import { Input, InputPassword } from "$lib/components/ui/input"
   import { Spinner } from "$lib/components/ui/spinner"
 
   const id = $props.id()
@@ -24,6 +24,10 @@
 
   let pending = $state(false)
 </script>
+
+<svelte:head>
+  <title>Register - Segreto Dashboard</title>
+</svelte:head>
 
 <div class="w-full">
   <Card class="mx-auto w-full max-w-sm">
@@ -82,10 +86,9 @@
 
           <Field data-invalid={form?.errors?.password ? "" : undefined}>
             <FieldLabel for="password-{id}">Password</FieldLabel>
-            <Input
+            <InputPassword
               id="password-{id}"
               name="password"
-              type="password"
               required
               autocomplete="new-password"
               inputmode="text"
@@ -101,10 +104,9 @@
 
           <Field data-invalid={form?.errors?.confirmPassword ? "" : undefined}>
             <FieldLabel for="confirmPassword-{id}">Confirm Password</FieldLabel>
-            <Input
+            <InputPassword
               id="confirmPassword-{id}"
               name="confirmPassword"
-              type="password"
               required
               autocomplete="off"
               inputmode="text"
@@ -124,7 +126,7 @@
               Register
             </Button>
             <FieldDescription class="text-center">
-              Already have an account? <a href="/login">Login</a>
+              Already have an account? <a href="/login">Log In</a>
             </FieldDescription>
           </Field>
         </FieldGroup>

@@ -16,37 +16,28 @@
 
   let { user } = $derived(page.data)
 
-  const allLinks = [
+  const links = [
     {
       title: "Dashboard",
       href: "/",
-      onlyAdmin: false,
     },
     {
       title: "Orders",
       href: "/orders",
-      onlyAdmin: false,
     },
     {
       title: "Customers",
       href: "/customers",
-      onlyAdmin: false,
     },
     {
       title: "Producs",
       href: "/products",
-      onlyAdmin: false,
     },
     {
       title: "Settings",
       href: "/settings",
-      onlyAdmin: true,
     },
   ]
-
-  let links = $derived.by(() => {
-    return user?.role === "user" ? allLinks.filter((link) => !link.onlyAdmin) : allLinks
-  })
 </script>
 
 <header class="flex items-center px-4">
@@ -80,22 +71,24 @@
         aria-hidden="true"
       ></div> -->
 
-      <div class="-ml-2.25 flex items-center gap-3 max-lg:hidden">
-        {#each links as link (link.title)}
-          <span class="relative">
-            <a
-              href={link.href}
-              class="flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-sidebar-foreground hover:bg-sidebar-foreground/5 focus-visible:bg-sidebar-foreground/5 aria-current:bg-sidebar-foreground/5 *:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 *:data-[slot=icon]:size-6 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:fill-sidebar-ring *:last:data-[slot=icon]:ml-auto *:last:data-[slot=icon]:size-5 hover:*:data-[slot=icon]:fill-foreground focus-visible:*:data-[slot=icon]:fill-foreground aria-current:*:data-[slot=icon]:fill-foreground sm:py-2 sm:text-sm/5 sm:*:data-[slot=avatar]:size-6 sm:*:data-[slot=icon]:size-5 sm:*:last:data-[slot=icon]:size-4"
-            >
-              <span
-                class="absolute top-1/2 left-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
-                aria-hidden="true"
-              ></span>
-              <span class="truncate">{link.title}</span>
-            </a>
-          </span>
-        {/each}
-      </div>
+      {#if user?.role === "admin"}
+        <div class="-ml-2.25 flex items-center gap-3 max-lg:hidden">
+          {#each links as link (link.title)}
+            <span class="relative">
+              <a
+                href={link.href}
+                class="flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-sidebar-foreground hover:bg-sidebar-foreground/5 focus-visible:bg-sidebar-foreground/5 aria-current:bg-sidebar-foreground/5 *:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 *:data-[slot=icon]:size-6 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:fill-sidebar-ring *:last:data-[slot=icon]:ml-auto *:last:data-[slot=icon]:size-5 hover:*:data-[slot=icon]:fill-foreground focus-visible:*:data-[slot=icon]:fill-foreground aria-current:*:data-[slot=icon]:fill-foreground sm:py-2 sm:text-sm/5 sm:*:data-[slot=avatar]:size-6 sm:*:data-[slot=icon]:size-5 sm:*:last:data-[slot=icon]:size-4"
+              >
+                <span
+                  class="absolute top-1/2 left-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
+                  aria-hidden="true"
+                ></span>
+                <span class="truncate">{link.title}</span>
+              </a>
+            </span>
+          {/each}
+        </div>
+      {/if}
 
       <div class="-ml-4 flex-1" aria-hidden="true"></div>
       <div class="flex items-center gap-3">
