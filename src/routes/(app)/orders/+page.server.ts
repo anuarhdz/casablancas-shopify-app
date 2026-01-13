@@ -3,9 +3,16 @@ import { fetchOrders } from "$lib/shopify"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async () => {
-  const { data, error, success } = await fetchOrders()
+  const result = await fetchOrders()
 
-  const orders = data?.orders.edges.map(({ node }) => {
+  if (!result.success) {
+    return {
+      user: requireLogin(),
+      orders: null,
+    }
+  }
+
+  const orders = result.data.orders.edges.map(({ node }) => {
     const lineItems = node.lineItems.edges.map(({ node: item }) => ({
       name: item.name,
       quantity: item.quantity,
@@ -45,7 +52,6 @@ export const load: PageServerLoad = async () => {
 
   return {
     user: requireLogin(),
-    orders: orders ?? [],
-    error,
+    orders,
   }
 }

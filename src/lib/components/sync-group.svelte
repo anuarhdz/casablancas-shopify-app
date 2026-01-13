@@ -69,12 +69,12 @@
 
       const result = await response.json()
 
-      if (result.bulkOperation) {
+      if (result) {
         syncStatus = "polling"
-        statusMessage = `Waiting for Shopify to prepare data... (Operation: ${result.bulkOperation.id.split("/").pop()})`
+        statusMessage = `Waiting for Shopify to prepare data... (Operation: ${result.id.split("/").pop()})`
 
         // Automatically start polling and processing
-        const encodedId = encodeURIComponent(result.bulkOperation.id)
+        const encodedId = encodeURIComponent(result.id)
         const statusResponse = await fetch(`/api/sync/products/status/${encodedId}`, {
           method: "POST",
         })
@@ -87,6 +87,7 @@
         }
 
         const statusResult = await statusResponse.json()
+
         syncStatus = "success"
         statusMessage = `Successfully synced ${statusResult.objectCount} records!`
         lastResult = { ...result, statusResult }
@@ -122,7 +123,8 @@
         onclick={() => handleSync(dataItem.handle)}
         disabled={pending || dataItem.handle !== "products"}
         variant="outline"
-        size="sm">
+        size="sm"
+      >
         {#if pending && syncBy === dataItem.handle}
           <RefreshCw class="animate-spin" />
         {:else if syncStatus === "success" && syncBy === dataItem.handle}
@@ -157,7 +159,8 @@
         syncStatus === "error" && "border-red-600/50 bg-red-50 dark:bg-red-950/20",
         (syncStatus === "starting" || syncStatus === "polling") &&
           "border-blue-600/50 bg-blue-50 dark:bg-blue-950/20"
-      )}>
+      )}
+    >
       <div class="flex items-start gap-3">
         <div class="mt-0.5">
           {#if syncStatus === "success"}
@@ -176,7 +179,8 @@
               syncStatus === "error" && "text-red-900 dark:text-red-100",
               (syncStatus === "starting" || syncStatus === "polling") &&
                 "text-blue-900 dark:text-blue-100"
-            )}>
+            )}
+          >
             {statusMessage}
           </p>
           {#if syncStatus === "polling"}

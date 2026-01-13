@@ -15,8 +15,7 @@
   import { renderComponent } from "$lib/table"
   import type { ColumnDef, Table } from "@tanstack/table-core"
   let { data } = $props()
-  $inspect(data)
-  let tableData = $derived<Order[]>(data.orders)
+  let tableData = $derived<Order[]>(data.orders ?? [])
 
   const windowSize = useWindowSize({ defaultHeight: 760 })
   const gridHeight = $derived(Math.max(400, windowSize.height - 150))
@@ -131,8 +130,9 @@
     onDataChange: (newData) => {
       tableData = newData
     },
+    rowHeight: "extra-tall",
     getRowId: (row) => row.id,
-    enableSearch: true,
+    enableSearch: false,
     initialState: {
       columnPinning: {
         left: ["select"],
@@ -159,5 +159,5 @@
       <DataGridViewMenu {table} />
     </div>
   </div>
-  <DataGrid {...dataGridProps} {table} height={600} />
+  <DataGrid {...dataGridProps} {table} height={gridHeight} />
 </div>

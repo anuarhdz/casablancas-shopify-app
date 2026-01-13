@@ -1,21 +1,31 @@
 import { db } from "$lib/server/db"
 import { bulkOperation as bulkOperationTable } from "$lib/server/db/schema"
-import { getBulkProducts } from "$lib/shopify"
+import { fetchBulkProducts } from "$lib/shopify"
 import { error, json } from "@sveltejs/kit"
 import type { RequestHandler } from "./$types"
 
 export const POST: RequestHandler = async () => {
-  const { data } = await getBulkProducts()
+  const result = await fetchBulkProducts()
 
-  if (!data || !data.bulkOperationRunQuery) {
-    return error(400, "An error has occurred")
+  if (!result.success) {
+    throw error(500, result.error.message ?? "Error de Shopify")
   }
 
-  const { bulkOperation, userErrors } = data.bulkOperationRunQuery
+  const { bulkOperationRunQuery } = result.data
 
-  if (userErrors?.length) {
-    console.error("Bulk operation errors:", userErrors)
-    return error(400, userErrors[0].message)
+  if (!bulkOperationRunQuery) {
+    throw error(500, "No se recibió respuesta de la operación")
+  }
+
+  const { bulkOperation, userErrors } = bulkOperationRunQuery
+
+  if (userErrors.length > 0) {
+    const messages = userErrors.map((e) => e.message).join(", ")
+    throw error(400, messages)
+  }
+
+  if (!bulkOperation) {
+    throw error(500, "No se pudo crear la operación bulk")
   }
 
   if (bulkOperation) {
@@ -25,11 +35,11 @@ export const POST: RequestHandler = async () => {
         status: bulkOperation.status,
         url: bulkOperation.url,
       })
-    } catch (err) {
-      console.error("Failed to save bulk operation:", err)
-      return error(500, "Failed to save bulk operation to database")
+    } catch (dbError) {
+      const message = dbError instanceof Error ? dbError.message : "Error desconocido"
+      throw error(500, `Error al guardar en DB: ${message}`)
     }
   }
 
-  return json({ status: 200, bulkOperation })
+  return json(bulkOperation)
 }

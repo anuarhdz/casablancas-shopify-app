@@ -17,10 +17,12 @@ import { getShopifyCredentials } from "$lib/server/shopify"
 import { createAdminApiClient } from "@shopify/admin-api-client"
 import { ApiVersion, shopifyApi } from "@shopify/shopify-api"
 import "@shopify/shopify-api/adapters/node"
-import type { GetOrdersQuery } from "../../types/admin.generated"
+import type {
+  GetOrdersQuery,
+  GetProductsQuery,
+  RunProductsBulkOperationMutation,
+} from "../../types/admin.generated"
 const { accessToken } = await getShopifyCredentials()
-
-console.log()
 
 export const shopify = shopifyApi({
   apiSecretKey: SHOPIFY_API_SECRET,
@@ -51,7 +53,9 @@ export const clientOld = createAdminApiClient({
   apiVersion: PRIVATE_SHOPIFY_API_VERSION,
 })
 
-export const fetchProducts = async (limit: number = 50) => {
+export const fetchProducts = async (
+  limit: number = 50
+): Promise<FetchResult<GetProductsQuery>> => {
   try {
     const client = await createGraphQLClient()
     const response = await client.request(GET_PRODUCTS_QUERY, {
@@ -69,31 +73,20 @@ export const fetchProducts = async (limit: number = 50) => {
 
     return {
       success: true,
-      data: response.data,
+      data: response.data!,
     }
   } catch (error) {
     console.error("error fetching products: ", error)
     return {
       success: false,
-      error,
+      error: { message: error instanceof Error ? error.message : "Error desconocido" },
     }
   }
 }
 
 export const fetchOrders = async (
   limit: number = 50
-): Promise<
-  | {
-      success: boolean
-      data: GetOrdersQuery | undefined
-      error?: undefined
-    }
-  | {
-      success: boolean
-      error: unknown
-      data?: undefined
-    }
-> => {
+): Promise<FetchResult<GetOrdersQuery>> => {
   try {
     const client = await createGraphQLClient()
     const response = await client.request(GET_ORDERS_QUERY, {
@@ -101,7 +94,6 @@ export const fetchOrders = async (
         first: limit,
       },
     })
-    console.log(response)
 
     if (response.errors) {
       return {
@@ -112,13 +104,13 @@ export const fetchOrders = async (
 
     return {
       success: true,
-      data: response.data,
+      data: response.data!,
     }
   } catch (error) {
-    console.error("error fetching products: ", error)
+    console.error("error fetching orders: ", error)
     return {
       success: false,
-      error,
+      error: { message: error instanceof Error ? error.message : "Error desconocido" },
     }
   }
 }
@@ -148,62 +140,37 @@ export const fetchCountOrders = async (limit: number = 50) => {
   }
 }
 
-export const getTotalOrders = async () => {
-  try {
-    const response = await clientOld.request(COUNT_ORDERS_QUERY)
+type FetchResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: GraphQLErrors }
 
-    return {
-      success: true,
-      data: response.data,
-    }
-  } catch (error) {
-    console.error("error fetching orders:", error)
-    return {
-      success: false,
-      data: null,
-    }
-  }
+type GraphQLErrors = {
+  networkStatusCode?: number
+  message?: string
+  graphQLErrors?: any[]
 }
 
-export const getOrders = async (limit: number = 2) => {
+export const fetchBulkProducts = async (): Promise<
+  FetchResult<RunProductsBulkOperationMutation>
+> => {
   try {
-    const response = await clientOld.request(GET_ORDERS_QUERY, {
+    const client = await createGraphQLClient()
+    const response = await client.request(BULK_PRODUCTS_MUTATION, {
       variables: {
-        first: limit,
+        query: BULK_PRODUCTS_QUERY,
       },
     })
 
-    return {
-      success: true,
-      data: response.data,
+    if (response.errors) {
+      return { success: false, error: response.errors }
     }
-  } catch (error) {
-    console.error("error fetching orders:", error)
-    return {
-      success: false,
-      orders: [],
-    }
-  }
-}
 
-export const getProducts = async () => {
-  try {
-    const response = await clientOld.request(GET_PRODUCTS_QUERY, {
-      variables: {
-        first: 10,
-      },
-    })
-    console.log(response.extensions)
-
-    return {
-      success: true,
-      data: response.data,
-    }
+    return { success: true, data: response.data! }
   } catch (error) {
     console.error("error fetching products: ", error)
     return {
       success: false,
-      data: null,
+      error: { message: error instanceof Error ? error.message : "Error desconocido" },
     }
   }
 }
@@ -249,17 +216,21 @@ export const pollBulkOperationById = async ({
   timeoutMs?: number
 }): Promise<BulkOperationResult> => {
   const start = Date.now()
+  const client = await createGraphQLClient()
 
   while (true) {
-    const response = await clientOld.request(BULK_PRODUCTS_OPERATION_BY_ID, {
+    const response = await client.request(BULK_PRODUCTS_OPERATION_BY_ID, {
       variables: {
         id: bulkOperationId,
       },
     })
 
+    console.log("📊 Polling response:", JSON.stringify(response, null, 2))
+
     const node = response.data?.node
 
     if (!node) {
+      console.error("❌ No node found in response:", response)
       throw new Error(`Bulk operation not found for id: ${bulkOperationId}`)
     }
 
