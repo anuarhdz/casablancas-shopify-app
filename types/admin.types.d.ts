@@ -44327,15 +44327,15 @@ export enum OrderTransactionErrorCode {
   ExpiredCard = 'EXPIRED_CARD',
   /** There was an unknown error with processing the payment. */
   GenericError = 'GENERIC_ERROR',
-  /** The address does not match the card number. */
+  /** The address is incorrect. */
   IncorrectAddress = 'INCORRECT_ADDRESS',
-  /** The CVC does not match the card number. */
+  /** The card security code (CVC/CVV) is incorrect. */
   IncorrectCvc = 'INCORRECT_CVC',
   /** The card number is incorrect. */
   IncorrectNumber = 'INCORRECT_NUMBER',
-  /** The entered PIN is incorrect. */
+  /** The PIN entered is incorrect. */
   IncorrectPin = 'INCORRECT_PIN',
-  /** The ZIP or postal code does not match the card number. */
+  /** The ZIP or postal code doesn't match the one on file. */
   IncorrectZip = 'INCORRECT_ZIP',
   /** The amount is either too high or too low for the provider. */
   InvalidAmount = 'INVALID_AMOUNT',

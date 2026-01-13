@@ -17,6 +17,7 @@ import { getShopifyCredentials } from "$lib/server/shopify"
 import { createAdminApiClient } from "@shopify/admin-api-client"
 import { ApiVersion, shopifyApi } from "@shopify/shopify-api"
 import "@shopify/shopify-api/adapters/node"
+import type { GetOrdersQuery } from "../../types/admin.generated"
 const { accessToken } = await getShopifyCredentials()
 
 console.log()
@@ -79,7 +80,20 @@ export const fetchProducts = async (limit: number = 50) => {
   }
 }
 
-export const fetchOrders = async (limit: number = 50) => {
+export const fetchOrders = async (
+  limit: number = 50
+): Promise<
+  | {
+      success: boolean
+      data: GetOrdersQuery | undefined
+      error?: undefined
+    }
+  | {
+      success: boolean
+      error: unknown
+      data?: undefined
+    }
+> => {
   try {
     const client = await createGraphQLClient()
     const response = await client.request(GET_ORDERS_QUERY, {
