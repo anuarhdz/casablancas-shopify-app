@@ -46,7 +46,6 @@ export const actions: Actions = {
         console.log(error.message, error.status)
       }
     }
-    console.log(authData)
 
     return { message: authData?.message }
   },
