@@ -60883,7 +60883,7 @@ export type ShopPlan = {
   displayName: Scalars['String']['output'];
   /** Whether the shop is a partner development shop for testing purposes. */
   partnerDevelopment: Scalars['Boolean']['output'];
-  /** The public display name of the shop's billing plan. Possible values are: Advanced, Basic, Development, Grow, Inactive, Lite, Other, Paused, Plus, Plus Trial, Retail, Shop Component, Shopify Finance, Staff Business, Starter, and Trial. */
+  /** The public display name of the shop's billing plan. Possible values are: Advanced, Agentic, Basic, Development, Grow, Inactive, Lite, Other, Paused, Plus, Plus Trial, Retail, Shop Component, Shopify Finance, Staff Business, Starter, and Trial. */
   publicDisplayName: Scalars['String']['output'];
   /** Whether the shop has a Shopify Plus subscription. */
   shopifyPlus: Scalars['Boolean']['output'];
