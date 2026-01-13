@@ -1,6 +1,6 @@
 export const GET_PRODUCTS_QUERY = /* GraphQL */ `
   #graphql
-  query getProducts($first: Int!) {
+  query GetProducts($first: Int!) {
     products(first: $first, sortKey: TITLE, reverse: true) {
       edges {
         node {
@@ -70,7 +70,7 @@ export const GET_PRODUCTS_QUERY = /* GraphQL */ `
 
 export const BULK_PRODUCTS_QUERY = /* GraphQL */ `
   #graphql
-  {
+  query BulkProducts {
     products {
       edges {
         node {
