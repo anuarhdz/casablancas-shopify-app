@@ -1,5 +1,10 @@
 import { getRequestEvent } from "$app/server"
-import { BETTER_AUTH_SECRET, BETTER_AUTH_URL, SHOPIFY_APP_URL } from "$env/static/private"
+import {
+  BETTER_AUTH_SECRET,
+  BETTER_AUTH_SUPER_ADMIN,
+  BETTER_AUTH_URL,
+  SHOPIFY_APP_URL,
+} from "$env/static/private"
 import { db } from "$lib/server/db"
 import * as schema from "$lib/server/db/schema"
 import { betterAuth } from "better-auth"
@@ -41,7 +46,7 @@ export const auth = betterAuth({
   },
   trustedOrigins: [BETTER_AUTH_URL, SHOPIFY_APP_URL],
   plugins: [
-    admin({ adminUserIds: ["FUxSVTnAKuMSeJze9cr6O5vGbJuEyvoo"] }),
+    admin({ adminUserIds: [BETTER_AUTH_SUPER_ADMIN] }),
     sveltekitCookies(getRequestEvent),
   ],
   logger: {

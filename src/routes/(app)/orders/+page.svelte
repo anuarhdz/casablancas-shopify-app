@@ -159,5 +159,6 @@
       <DataGridViewMenu {table} />
     </div>
   </div>
+  <!-- svelte-ignore state_referenced_locally -->
   <DataGrid {...dataGridProps} {table} height={gridHeight} />
 </div>
