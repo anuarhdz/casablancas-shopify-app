@@ -1,5 +1,5 @@
 // src/lib/shopify/processBulkRecord.ts
-import { db } from "$lib/server/db" // ajusta la ruta a donde tengas tu instancia de drizzle
+import { db, withSystemContext } from "$lib/server/db" // ajusta la ruta a donde tengas tu instancia de drizzle
 import { product, productMedia, productVariant } from "$lib/server/db/schema"
 
 type ShopifyProductRecord = {
@@ -121,26 +121,29 @@ async function upsertProduct(r: ShopifyProductRecord) {
   }
 
   // upsert: insert si no existe, update si ya existe
-  await db
-    .insert(product)
-    .values(values)
-    .onConflictDoUpdate({
-      target: product.id,
-      set: {
-        title: values.title,
-        descriptionHtml: values.descriptionHtml,
-        handle: values.handle,
-        status: values.status,
-        vendor: values.vendor,
-        productType: values.productType,
-        createdAt: values.createdAt,
-        updatedAt: values.updatedAt,
-        publishedAt: values.publishedAt,
-        tags: values.tags,
-        featuredImageUrl: values.featuredImageUrl,
-        featuredImageAlt: values.featuredImageAlt,
-      },
-    })
+  // Use system context for Shopify sync operations
+  await withSystemContext(() =>
+    db
+      .insert(product)
+      .values(values)
+      .onConflictDoUpdate({
+        target: product.id,
+        set: {
+          title: values.title,
+          descriptionHtml: values.descriptionHtml,
+          handle: values.handle,
+          status: values.status,
+          vendor: values.vendor,
+          productType: values.productType,
+          createdAt: values.createdAt,
+          updatedAt: values.updatedAt,
+          publishedAt: values.publishedAt,
+          tags: values.tags,
+          featuredImageUrl: values.featuredImageUrl,
+          featuredImageAlt: values.featuredImageAlt,
+        },
+      })
+  )
 }
 
 async function upsertVariant(r: ShopifyVariantRecord) {
@@ -156,20 +159,23 @@ async function upsertVariant(r: ShopifyVariantRecord) {
     inventoryQuantity: inventoryQuantity ?? 0,
   }
 
-  await db
-    .insert(productVariant)
-    .values(values)
-    .onConflictDoUpdate({
-      target: productVariant.id,
-      set: {
-        productId: values.productId,
-        title: values.title,
-        price: values.price,
-        sku: values.sku,
-        inventoryPolicy: values.inventoryPolicy,
-        inventoryQuantity: values.inventoryQuantity,
-      },
-    })
+  // Use system context for Shopify sync operations
+  await withSystemContext(() =>
+    db
+      .insert(productVariant)
+      .values(values)
+      .onConflictDoUpdate({
+        target: productVariant.id,
+        set: {
+          productId: values.productId,
+          title: values.title,
+          price: values.price,
+          sku: values.sku,
+          inventoryPolicy: values.inventoryPolicy,
+          inventoryQuantity: values.inventoryQuantity,
+        },
+      })
+  )
 }
 
 async function upsertProductMedia(r: ShopifyMediaImageRecord) {
@@ -190,16 +196,19 @@ async function upsertProductMedia(r: ShopifyMediaImageRecord) {
     position: 0, // no lo pedimos en la query; puedes ajustar si quieres
   }
 
-  await db
-    .insert(productMedia)
-    .values(values)
-    .onConflictDoUpdate({
-      target: productMedia.id,
-      set: {
-        productId: values.productId,
-        url: values.url,
-        altText: values.altText,
-        position: values.position,
-      },
-    })
+  // Use system context for Shopify sync operations
+  await withSystemContext(() =>
+    db
+      .insert(productMedia)
+      .values(values)
+      .onConflictDoUpdate({
+        target: productMedia.id,
+        set: {
+          productId: values.productId,
+          url: values.url,
+          altText: values.altText,
+          position: values.position,
+        },
+      })
+  )
 }

@@ -1,3 +1,4 @@
+import { withSystemContext } from "$lib/server/db"
 import { db } from "$lib/server/db"
 import { bulkOperation as bulkOperationTable } from "$lib/server/db/schema"
 import { fetchBulkProducts, withShopify } from "$lib/shopify"
@@ -39,11 +40,14 @@ export const POST: RequestHandler = async () => {
   }
 
   try {
-    await db.insert(bulkOperationTable).values({
-      shopifyId: bulkOperation.id,
-      status: bulkOperation.status,
-      url: bulkOperation.url,
-    })
+    // Use system context for Shopify sync operations
+    await withSystemContext(() =>
+      db.insert(bulkOperationTable).values({
+        shopifyId: bulkOperation.id,
+        status: bulkOperation.status,
+        url: bulkOperation.url,
+      })
+    )
   } catch (dbError) {
     const message = dbError instanceof Error ? dbError.message : "Error desconocido"
     throw error(500, `Error al guardar en DB: ${message}`)

@@ -1,4 +1,4 @@
-import { db } from "$lib/server/db"
+import { db, withSystemContext } from "$lib/server/db"
 import { shopifySession } from "$lib/server/db/schema"
 import { Session } from "@shopify/shopify-api"
 import { eq } from "drizzle-orm"
@@ -17,32 +17,39 @@ export const saveSession = async (session: PersistedShopifySession) => {
   }
   console.log("still on save")
 
-  await db
-    .insert(shopifySession)
-    .values({
-      shop: session.shop,
-      accessToken: session.accessToken,
-      scope: session.scope,
-      expiresAt: session.expiresAt ?? null,
-    })
-    .onConflictDoUpdate({
-      target: shopifySession.shop,
-      set: {
+  // Use system context for Shopify OAuth operations
+  await withSystemContext(() =>
+    db
+      .insert(shopifySession)
+      .values({
+        shop: session.shop,
         accessToken: session.accessToken,
         scope: session.scope,
-        updatedAt: new Date(),
-      },
-    })
+        expiresAt: session.expiresAt ?? null,
+      })
+      .onConflictDoUpdate({
+        target: shopifySession.shop,
+        set: {
+          accessToken: session.accessToken,
+          scope: session.scope,
+          updatedAt: new Date(),
+        },
+      })
+  )
 }
 
 export const loadSession = async (shop?: string) => {
-  const query = db.select().from(shopifySession)
+  // Use system context for loading Shopify session
+  const row = await withSystemContext(async () => {
+    const query = db.select().from(shopifySession)
 
-  if (shop) {
-    query.where(eq(shopifySession.shop, shop))
-  }
+    if (shop) {
+      query.where(eq(shopifySession.shop, shop))
+    }
 
-  const [row] = await query.limit(1)
+    const [result] = await query.limit(1)
+    return result
+  })
 
   if (!row) {
     return null
@@ -56,7 +63,8 @@ export const loadSession = async (shop?: string) => {
 }
 
 export const deleteSession = async () => {
-  await db.delete(shopifySession)
+  // Use system context for deleting Shopify session
+  await withSystemContext(() => db.delete(shopifySession))
 }
 
 export const createOfflineSession = (params: {
