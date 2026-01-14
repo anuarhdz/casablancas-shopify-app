@@ -101,6 +101,44 @@ For large datasets, use Shopify's bulk operations API:
 
 Example: `src/routes/api/sync/products/+server.ts` demonstrates this pattern
 
+### Shopify OAuth Flow
+
+The app uses OAuth for authentication instead of hardcoded access tokens:
+
+**Session Management** (`src/lib/server/db/shopify.session.ts`):
+- `saveSession()` - Store access tokens and scopes in database
+- `loadSession()` - Retrieve session from database
+- `deleteSession()` - Remove session (used on auth expiry)
+- `createOfflineSession()` - Create Shopify SDK session object
+
+**OAuth Endpoints**:
+- `/api/auth` - Initiates OAuth flow, redirects to Shopify authorization
+- `/api/auth/callback` - Handles OAuth callback, exchanges code for token
+
+**Auth Wrapper Functions** (`src/lib/shopify.ts`):
+- `withShopify()` - Wraps Shopify API calls with session handling and auth error detection
+- `withShopifyLoad()` - Use in SvelteKit load functions to auto-redirect on reauth needed
+
+**Usage Pattern**:
+```typescript
+// In load functions
+export const load = async () => {
+  const data = await withShopifyLoad(() => fetchProducts())
+  return { products: data.products }
+}
+
+// In API routes
+export const POST = async () => {
+  const result = await withShopify((client) => fetchBulkProducts(client))
+  if (!result.success) throw error(500, result.error.message)
+  return json(result.data)
+}
+```
+
+**Root Layout Protection** (`src/routes/+layout.server.ts`):
+- Validates Shopify HMAC on requests with `shop` parameter
+- Redirects to OAuth flow if session doesn't exist for shop
+
 ### SvelteKit Routing
 
 - `+page.server.ts` - Page-specific server load functions
@@ -145,7 +183,7 @@ All Shopify variables use `PRIVATE_` prefix to ensure they're only available ser
 - Schema imported from `src/lib/server/db/schema.ts`
 
 **Schema Structure** (`src/lib/server/db/schema.ts`):
-- Tables: `product`, `productVariant`, `productMedia`, `bulkOperation`
+- Tables: `product`, `productVariant`, `productMedia`, `bulkOperation`, `shopifySession`
 - Uses Drizzle relations for type-safe joins
 - Exports typed insert/select types (e.g., `InsertProduct`, `SelectProduct`)
 
