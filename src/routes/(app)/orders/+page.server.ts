@@ -1,18 +1,12 @@
 import { requireLogin } from "$lib/server/login"
-import { fetchOrders } from "$lib/shopify"
+import { fetchOrders, withShopifyLoad } from "$lib/shopify"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async () => {
-  const result = await fetchOrders()
+  const data = await withShopifyLoad(() => fetchOrders())
+  const user = requireLogin()
 
-  if (!result.success) {
-    return {
-      user: requireLogin(),
-      orders: null,
-    }
-  }
-
-  const orders = result.data.orders.edges.map(({ node }) => {
+  const orders = data.orders.edges.map(({ node }) => {
     const lineItems = node.lineItems.edges.map(({ node: item }) => ({
       name: item.name,
       quantity: item.quantity,
@@ -50,8 +44,5 @@ export const load: PageServerLoad = async () => {
     }
   })
 
-  return {
-    user: requireLogin(),
-    orders,
-  }
+  return { user, orders }
 }

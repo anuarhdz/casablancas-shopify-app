@@ -71,6 +71,13 @@
       "when": 1768124334212,
       "tag": "0009_spotty_kylun",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1768338463109,
+      "tag": "0010_cloudy_moonstone",
+      "breakpoints": true
     }
   ]
 }

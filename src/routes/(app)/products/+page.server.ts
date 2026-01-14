@@ -1,13 +1,15 @@
 import { requireLogin } from "$lib/server/login"
-import { fetchProducts } from "$lib/shopify"
+import { fetchProducts, withShopifyLoad } from "$lib/shopify"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async () => {
-  const result = await fetchProducts()
-  const products = result.success ? result.data : null
+  const data = await withShopifyLoad(() => fetchProducts())
+  const user = requireLogin()
+
+  const { products } = data
 
   return {
-    user: requireLogin(),
+    user,
     products,
   }
 }

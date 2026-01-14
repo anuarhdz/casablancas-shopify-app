@@ -2,7 +2,7 @@
 
 client_id = "914be787c5be08ed071479540426a142"
 name = "Casablancas App"
-application_url = "https://untense-williemae-derangedly.ngrok-free.dev"
+application_url = "https://f180b4a18317.ngrok-free.app"
 embedded = false
 
 [webhooks]
@@ -11,10 +11,8 @@ api_version = "2026-01"
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_all_orders,read_customers,read_orders,read_products"
-optional_scopes = [ ]
+optional_scopes = []
 use_legacy_install_flow = false
 
 [auth]
-redirect_urls = [
-  "https://untense-williemae-derangedly.ngrok-free.dev/api/shopify/callback"
-]
+redirect_urls = ["https://f180b4a18317.ngrok-free.app/api/auth/callback"]

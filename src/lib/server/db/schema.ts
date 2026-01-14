@@ -13,6 +13,15 @@ import {
   varchar,
 } from "drizzle-orm/pg-core"
 
+export const shopifySession = pgTable("shopify_session", {
+  shop: text("shop").primaryKey(),
+  accessToken: text("access_token").notNull(),
+  scope: text("scope").notNull(),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
