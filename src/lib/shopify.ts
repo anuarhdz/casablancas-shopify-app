@@ -14,6 +14,7 @@ import {
 import { deleteSession, loadSession } from "$lib/server/db/shopify.session"
 import type { GraphqlClient } from "@shopify/shopify-api"
 import { ApiVersion, shopifyApi } from "@shopify/shopify-api"
+import "@shopify/shopify-api/adapters/node"
 import { redirect } from "@sveltejs/kit"
 import type {
   GetOrdersQuery,

@@ -43,7 +43,7 @@
       filterFn,
       accessorKey: "id",
       header: "ID",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "ID", cell: { variant: "short-text" } },
     },
     {
       id: "createdAt",
@@ -51,21 +51,21 @@
       minSize: 200,
       accessorKey: "createdAt",
       header: "Created",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Created", cell: { variant: "short-text" } },
     },
     {
       id: "name",
       filterFn,
       accessorKey: "name",
       header: "Order name",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Order name", cell: { variant: "short-text" } },
     },
     {
       id: "customerId",
       filterFn,
       accessorKey: "customerId",
       header: "Customer ID",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Customer ID", cell: { variant: "short-text" } },
     },
     {
       id: "customerName",
@@ -73,7 +73,7 @@
       minSize: 250,
       accessorKey: "customerName",
       header: "Customer name",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Customer name", cell: { variant: "short-text" } },
     },
     {
       id: "email",
@@ -81,7 +81,7 @@
       minSize: 250,
       accessorKey: "email",
       header: "Customer email",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Customer email", cell: { variant: "short-text" } },
     },
     {
       id: "note",
@@ -89,14 +89,14 @@
       minSize: 320,
       accessorKey: "note",
       header: "Note",
-      meta: { cell: { variant: "long-text" } },
+      meta: { label: "Note", cell: { variant: "long-text" } },
     },
     {
       id: "lineItemsTotal",
       filterFn,
       accessorKey: "lineItemsTotal",
       header: "Line items",
-      meta: { cell: { variant: "number" } },
+      meta: { label: "Line items", cell: { variant: "number" } },
     },
     {
       id: "total",
@@ -104,7 +104,7 @@
       minSize: 180,
       accessorKey: "total",
       header: "Total",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Total", cell: { variant: "short-text" } },
     },
     {
       id: "financialStatus",
@@ -112,7 +112,7 @@
       minSize: 180,
       accessorKey: "financialStatus",
       header: "Financial status",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Financial status", cell: { variant: "short-text" } },
     },
     {
       id: "fulfillmentStatus",
@@ -120,7 +120,7 @@
       minSize: 180,
       accessorKey: "fulfillmentStatus",
       header: "Fulfillment status",
-      meta: { cell: { variant: "short-text" } },
+      meta: { label: "Fulfillment status", cell: { variant: "short-text" } },
     },
   ]
 
