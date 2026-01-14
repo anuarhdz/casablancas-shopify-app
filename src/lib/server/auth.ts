@@ -1,0 +1,61 @@
+import { getRequestEvent } from "$app/server"
+import {
+  BETTER_AUTH_SECRET,
+  BETTER_AUTH_SUPER_ADMIN,
+  BETTER_AUTH_URL,
+  SHOPIFY_APP_URL,
+} from "$env/static/private"
+import { db } from "$lib/server/db"
+import * as schema from "$lib/server/db/schema"
+import { betterAuth } from "better-auth"
+import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { admin } from "better-auth/plugins"
+import { sveltekitCookies } from "better-auth/svelte-kit"
+
+export const auth = betterAuth({
+  baseURL: BETTER_AUTH_URL,
+  secret: BETTER_AUTH_SECRET,
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema,
+  }),
+  emailAndPassword: {
+    enabled: true,
+    autoSignIn: true,
+    requireEmailVerification: false,
+    sendResetPassword: async ({ user, url, token }, request) => {
+      console.log(request)
+      console.log(user)
+      console.log(url)
+      console.log(token)
+    },
+    onPasswordReset: async ({ user }, request) => {
+      // your logic here
+      console.log(`Password for user ${user.email} has been reset.`)
+    },
+  },
+  emailVerification: {
+    sendOnSignIn: true,
+    sendOnSignUp: true,
+    sendVerificationEmail: async ({ user, url, token }, request) => {
+      console.log(request)
+      console.log(user)
+      console.log(url)
+      console.log(token)
+    },
+  },
+  trustedOrigins: [BETTER_AUTH_URL, SHOPIFY_APP_URL],
+  plugins: [
+    admin({ adminUserIds: [BETTER_AUTH_SUPER_ADMIN] }),
+    sveltekitCookies(getRequestEvent),
+  ],
+  logger: {
+    disabled: true,
+    level: "debug",
+    log: (level, message) => {
+      console.log(`[${level}] ${message}`)
+    },
+  },
+})
+
+export type Session = typeof auth.$Infer.Session

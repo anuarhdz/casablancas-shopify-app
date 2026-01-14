@@ -7,36 +7,46 @@ export const GET_ORDERS_QUERY = /* GraphQL */ `
           id
           name
           createdAt
-          note
-          tags
-          customer {
-            firstName
-            lastName
-            id
-            numberOfOrders
-            defaultAddress {
-              address1
-              address2
-              city
-              zip
-              province
-              country
-              phone
-              company
-              latitude
-              longitude
-              name
-            }
-          }
+          displayFinancialStatus
+          displayFulfillmentStatus
           totalPriceSet {
             shopMoney {
               amount
               currencyCode
             }
           }
-          displayFinancialStatus
+          subtotalPriceSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
+          customer {
+            displayName
+            id
+          }
+          note
+          email
+          shippingAddress {
+            address1
+            city
+            provinceCode
+            zip
+          }
+          lineItems(first: 5) {
+            edges {
+              node {
+                name
+                quantity
+                sku
+                variant {
+                  id
+                  title
+                }
+              }
+            }
+          }
         }
-        cursor
       }
     }
   }

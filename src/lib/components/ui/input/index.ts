@@ -1,0 +1,9 @@
+import InputPassword from "./input-password.svelte"
+import Root from "./input.svelte"
+
+export {
+  //
+  Root as Input,
+  InputPassword,
+  Root,
+}

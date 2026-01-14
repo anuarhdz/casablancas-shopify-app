@@ -1,0 +1,1 @@
+ALTER TABLE "bulk_operation" ALTER COLUMN "status" SET DATA TYPE text;

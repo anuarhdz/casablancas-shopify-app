@@ -1,0 +1,1 @@
+ALTER TABLE "bulk_operation" ALTER COLUMN "url" DROP NOT NULL;
