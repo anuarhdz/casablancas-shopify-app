@@ -53,3 +53,11 @@ export const ResetPasswordSchema = v.pipe(
     ["confirmPassword"]
   )
 )
+
+export const UserRoles = ["admin", "user"] as const
+
+export const CreateUserSchema = v.object({
+  fullName: v.pipe(v.string(), v.nonEmpty("Name is required")),
+  email: v.pipe(v.string(), v.nonEmpty("Email is required"), v.email("Invalid email")),
+  role: v.picklist(UserRoles),
+})
