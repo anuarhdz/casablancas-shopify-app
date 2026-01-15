@@ -77,7 +77,10 @@
             <span class="relative">
               <a
                 href={link.href}
-                aria-current={link.href === page.url.pathname ? "page" : undefined}
+                aria-current={link.href === page.url.pathname ||
+                (page.url.pathname.startsWith(link.href) && link.href !== "/")
+                  ? "page"
+                  : undefined}
                 class="flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-sidebar-foreground hover:bg-sidebar-foreground/5 focus-visible:bg-sidebar-foreground/5 *:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 *:data-[slot=icon]:size-6 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:fill-sidebar-ring *:last:data-[slot=icon]:ml-auto *:last:data-[slot=icon]:size-5 hover:*:data-[slot=icon]:fill-foreground focus-visible:*:data-[slot=icon]:fill-foreground sm:py-2 sm:text-sm/5 sm:*:data-[slot=avatar]:size-6 sm:*:data-[slot=icon]:size-5 sm:*:last:data-[slot=icon]:size-4 aria-current:bg-sidebar-foreground/5 aria-current:*:data-[slot=icon]:fill-foreground"
               >
                 <span

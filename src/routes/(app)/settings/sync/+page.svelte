@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-  <title>Settings - Segreto Dashboard</title>
+  <title>Shopify Sync - Segreto Dashboard</title>
 </svelte:head>
 
 <div class="flex justify-center">
